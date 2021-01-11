@@ -34,34 +34,43 @@ namespace MemoryGame
                     {
                         RemoveGuessedCards(matrix, row_card_1, col_card_1, row_card_2, col_card_2, matrix_tmp);
                         counter1++;
+                        if (counter1 + counter2 != number_of_pairs)
+                        {
+                            PlayerTurn(size, matrix, out row_card_1, out col_card_1, out row_card_2, out col_card_2, matrix_tmp);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    matrix_tmp[row_card_1 - 1, col_card_1 - 1] = '*';
+                    matrix_tmp[row_card_2 - 1, col_card_2 - 1] = '*';
+                    if (counter1 + counter2 != number_of_pairs)
+                    {
+                        Console.WriteLine("PLAYER 2");
+                        PrintMatrixTmp(size, matrix_tmp);
+                        PlayerTurn(size, matrix, out row_card_1, out col_card_1, out row_card_2, out col_card_2, matrix_tmp);
+                        while (matrix[row_card_1 - 1, col_card_1 - 1] == matrix[row_card_2 - 1, col_card_2 - 1])
+                        {
+                            RemoveGuessedCards(matrix, row_card_1, col_card_1, row_card_2, col_card_2, matrix_tmp);
+                            counter2++;
+                            if (counter1 + counter2 != number_of_pairs)
+                            {
+                                PlayerTurn(size, matrix, out row_card_1, out col_card_1, out row_card_2, out col_card_2, matrix_tmp);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        matrix_tmp[row_card_1 - 1, col_card_1 - 1] = '*';
+                        matrix_tmp[row_card_2 - 1, col_card_2 - 1] = '*';
                         if (counter1 + counter2 == number_of_pairs)
                         {
                             break;
                         }
-                        PlayerTurn(size, matrix, out row_card_1, out col_card_1, out row_card_2, out col_card_2, matrix_tmp);
                     }
-                    matrix_tmp[row_card_1 - 1, col_card_1 - 1] = '*';
-                    matrix_tmp[row_card_2 - 1, col_card_2 - 1] = '*';
-                    if (counter1 + counter2 == number_of_pairs)
-                    {
-                        break;
-                    }
-                    Console.WriteLine("PLAYER 2");
-                    PrintMatrixTmp(size, matrix_tmp);
-                    PlayerTurn(size, matrix, out row_card_1, out col_card_1, out row_card_2, out col_card_2, matrix_tmp);
-                    while (matrix[row_card_1 - 1, col_card_1 - 1] == matrix[row_card_2 - 1, col_card_2 - 1])
-                    {
-                        RemoveGuessedCards(matrix, row_card_1, col_card_1, row_card_2, col_card_2, matrix_tmp);
-                        counter2++;
-                        if (counter1 + counter2 == number_of_pairs)
-                        {
-                            break;
-                        }
-                        PlayerTurn(size, matrix, out row_card_1, out col_card_1, out row_card_2, out col_card_2, matrix_tmp);
-                    }
-                    matrix_tmp[row_card_1 - 1, col_card_1 - 1] = '*';
-                    matrix_tmp[row_card_2 - 1, col_card_2 - 1] = '*';
-                    if (counter1 + counter2 == number_of_pairs)
+                    else
                     {
                         break;
                     }
@@ -79,10 +88,10 @@ namespace MemoryGame
 
         private static void PlayerTurn(int size, char[,] matrix, out int row_card_1, out int col_card_1, out int row_card_2, out int col_card_2, char[,] matrix_tmp)
         {
-            ChooseFirstCard(out row_card_1, out col_card_1);
+            ChooseCard(out row_card_1, out col_card_1, 1);
             CheckAndPrintFirstCard(size, matrix, ref row_card_1, ref col_card_1, matrix_tmp);
 
-            ChooseSecondCard(out row_card_2, out col_card_2);
+            ChooseCard(out row_card_2, out col_card_2, 2);
             CheckAndPrintSecondCard(size, matrix, row_card_1, col_card_1, ref row_card_2, ref col_card_2, matrix_tmp);
         }
 
@@ -91,12 +100,12 @@ namespace MemoryGame
             while (row_card_2 <= 0 || row_card_2 > size || col_card_2 <= 0 || col_card_2 > size)
             {
                 Console.WriteLine($"Error! Please enter number from 1 to {size}: ");
-                ChooseSecondCard(out row_card_2, out col_card_2);
+                ChooseCard(out row_card_1, out col_card_1, 2);
             }
             while (matrix[row_card_2 - 1, col_card_2 - 1] == ' ' || row_card_2 - 1 == row_card_1 - 1 && col_card_2 - 1 == col_card_1 - 1)
             {
                 Console.WriteLine($"Error! The card is already open");
-                ChooseSecondCard(out row_card_2, out col_card_2);
+                ChooseCard(out row_card_1, out col_card_1, 2);
             }
             matrix_tmp[row_card_2 - 1, col_card_2 - 1] = matrix[row_card_2 - 1, col_card_2 - 1];
             PrintMatrixTmp(size, matrix_tmp);
@@ -107,12 +116,12 @@ namespace MemoryGame
             while (row_card_1 <= 0 || row_card_1 > size || col_card_1 <= 0 || col_card_1 > size)
             {
                 Console.WriteLine($"Error! Please enter number from 1 to {size}: ");
-                ChooseFirstCard(out row_card_1, out col_card_1);
+                ChooseCard(out row_card_1, out col_card_1, 1);
             }
             while (matrix[row_card_1 - 1, col_card_1 - 1] == ' ')
             {
                 Console.WriteLine($"Error! The card is already open");
-                ChooseFirstCard(out row_card_1, out col_card_1);
+                ChooseCard(out row_card_1, out col_card_1, 1);
             }
             matrix_tmp[row_card_1 - 1, col_card_1 - 1] = matrix[row_card_1 - 1, col_card_1 - 1];
             PrintMatrixTmp(size, matrix_tmp);
@@ -140,24 +149,15 @@ namespace MemoryGame
                     matrix_tmp[i, j] = '*';
                 }
             }
-
             return matrix_tmp;
         }
 
-        private static void ChooseSecondCard(out int row_card_2, out int col_card_2)
+        private static void ChooseCard(out int row_card, out int col_card, int index)
         {
-            Console.Write("Please enter row for card #2: ");
-            row_card_2 = Convert.ToInt32(Console.ReadLine());
-            Console.Write("Please enter column for card #2: ");
-            col_card_2 = Convert.ToInt32(Console.ReadLine());
-        }
-
-        private static void ChooseFirstCard(out int row_card_1, out int col_card_1)
-        {
-            Console.Write("Please enter row for card #1: ");
-            row_card_1 = Convert.ToInt32(Console.ReadLine());
-            Console.Write("Please enter column for card #1: ");
-            col_card_1 = Convert.ToInt32(Console.ReadLine());
+            Console.Write($"Please enter row for card #{index}: ");
+            row_card = Convert.ToInt32(Console.ReadLine());
+            Console.Write($"Please enter column for card #{index}: ");
+            col_card = Convert.ToInt32(Console.ReadLine());
         }
 
         private static void PrintMatrix(int size, char[,] matrix)
@@ -190,13 +190,11 @@ namespace MemoryGame
                         i_row = randomGenerator.Next(0, size);
                         i_col = randomGenerator.Next(0, size);
                     }
-
                     while (matrix[i_row, i_col] != 0);
                     matrix[i_row, i_col] = card;
                     count++;
                 }
             }
-
             return matrix;
         }
 
